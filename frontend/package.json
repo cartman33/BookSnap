@@ -1,10 +1,16 @@
 {
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^7.16.2",
+    "@react-navigation/native": "^7.2.5",
+    "@react-navigation/native-stack": "^7.16.0",
     "axios": "^1.16.0",
     "expo": "^54.0.34",
+    "lucide-react-native": "^1.17.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-native": "0.81.4"
+    "react-native": "0.81.4",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",

@@ -11,6 +11,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Spring Security 보안 설정 클래스입니다.
+ * 인증/인가 정책 및 필터 체인을 정의합니다.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -19,23 +23,24 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider)
       throws Exception {
     http
-            // 1. REST API이므로 기본 제공되는 웹 보안 기능들(CSRF, Form 로그인 등)을 모두 끕니다.
+            // 1. REST API이므로 CSRF 보안, 기본 폼 로그인, HTTP Basic 인증을 비활성화합니다.
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
 
-            // 2. 모바일/토큰 기반 통신이므로 서버에 세션을 저장하지 않도록(STATELESS) 설정합니다.
+            // 2. JWT 기반 인증을 사용하므로 서버에서 세션을 생성하거나 유지하지 않습니다. (무상태성)
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // 3. API 요청 권한을 설정합니다.
+            // 3. API 접근 권한 설정
             .authorizeHttpRequests(auth -> auth
-                    // 카카오 로그인을 처리하는 인증 API와 헬스체크 API는 누구나 접근할 수 있게 열어둡니다.
+                    // 인증이 필요 없는 경로 설정 (회원가입, 로그인, 헬스체크 등)
                     .requestMatchers("/api/auth/**", "/actuator/**").permitAll()
-                    // 그 외의 모든 API 요청은 '반드시 JWT 토큰이 있어야만(인증되어야만)' 통과시킵니다.
+                    // 그 외 모든 요청은 인증된 사용자만 접근 가능
                     .anyRequest().authenticated()
             )
+            // 4. JWT 인증 필터를 UsernamePasswordAuthenticationFilter 이전에 추가합니다.
             .addFilterBefore(
                 new JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter.class);

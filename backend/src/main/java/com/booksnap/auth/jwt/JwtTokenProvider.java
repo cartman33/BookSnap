@@ -14,6 +14,9 @@ import java.util.Optional;
 import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
 
+/**
+ * JWT 토큰의 생성, 파싱, 검증을 담당하는 컴포넌트입니다.
+ */
 @Component
 public class JwtTokenProvider {
 
@@ -25,12 +28,18 @@ public class JwtTokenProvider {
     this.key = buildKey(props.secret());
   }
 
+  /**
+   * 사용자 ID를 기반으로 Access Token을 생성합니다.
+   */
   public String createAccessToken(Long userId) {
     return createToken(
         Map.of("typ", "access", "uid", userId),
         props.accessTokenTtlSeconds());
   }
 
+  /**
+   * 사용자 ID를 기반으로 Refresh Token을 생성합니다.
+   */
   public String createRefreshToken(Long userId) {
     return createToken(
         Map.of("typ", "refresh", "uid", userId),
@@ -49,6 +58,10 @@ public class JwtTokenProvider {
         .compact();
   }
 
+  /**
+   * Access Token을 파싱하여 사용자 ID를 반환합니다.
+   * 토큰이 유효하지 않거나 Access Token이 아닌 경우 빈 Optional을 반환합니다.
+   */
   public Optional<Long> parseAccessTokenUserId(String token) {
     try {
       Claims claims = parse(token).getPayload();
@@ -67,6 +80,9 @@ public class JwtTokenProvider {
     return Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
   }
 
+  /**
+   * 문자열 비밀키를 기반으로 HMAC SHA 키 객체를 생성합니다.
+   */
   private static SecretKey buildKey(String secret) {
     if (secret == null) {
       throw new IllegalStateException("JWT_SECRET is required");
