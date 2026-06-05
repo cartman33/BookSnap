@@ -1,0 +1,38 @@
+# --- General ---
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+Thumbs.db
+
+# --- IDEs ---
+.idea/
+.vscode/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# --- Backend (Spring Boot / Maven) ---
+backend/target/
+backend/.settings/
+backend/.classpath
+backend/.project
+backend/bin/
+backend/*.iml
+
+# --- Frontend (React Native / Expo / Node) ---
+frontend/node_modules/
+frontend/.expo/
+frontend/dist/
+frontend/web-build/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# --- Docker ---
+# If you decide to use local volumes for DB data, ignore them here
+# mysql_data/
